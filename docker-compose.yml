@@ -1,0 +1,27 @@
+version: "3.6"
+services:
+  mongo:
+    image: mongo
+    container_name: Mnemosyne-vptis
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - ${MONGO_INITDB_ROOT_PORT}:27017
+    volumes:
+      - coffee_delivery:/data/db
+  rabbitmq:
+    image: rabbitmq:3.13.1-management-alpine
+    container_name: Hermes
+    ports:
+      - ${AMQP_SERVER_PORT}:5672
+      - ${AMQP_WEB_PORT}:15672
+    volumes:
+      - /data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${AMQP_USER}
+      - RABBITMQ_DEFAULT_PASS=${AMQP_PASS}
+    restart: unless-stopped
+volumes:
+  coffee_delivery:
